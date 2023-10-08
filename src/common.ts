@@ -1,5 +1,10 @@
 export type GameId = 'custom' | 'http' | 'minecraft' | 'minecraft_be' | 'factorio'
 export type Protocol = 'tcp' | 'udp'
+export type EndpointClaim = {
+  protocol: Protocol,
+  port: number
+}
+export type EndpointClaims = Array<EndpointClaim>
 
 export function toLocalPort(game: GameId): number {
   switch(game) {

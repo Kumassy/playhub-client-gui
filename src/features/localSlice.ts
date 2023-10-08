@@ -6,6 +6,7 @@ import { Child, Command } from '@tauri-apps/api/shell';
 import { CheckError, CheckId, checkRegistry, CheckResult, StatusCodeError, getCheckList, CheckEntry } from '../checks'
 import { GameId, toLocalPort, Protocol } from '../common'
 import { type } from '@tauri-apps/api/os';
+import { ConfigState, configSlice, setMinecraftFilePathChild } from './configSlice';
 
 export type LocalStateMessage = {
   key: string,
@@ -46,6 +47,7 @@ export interface LocalState {
   protocol: Protocol,
   game: GameId,
   config: GameConfig,
+  config2: ConfigState,
   checks: Array<Check>,
   child: Child | null,
   inGameCommand: string, // command sent to local server
@@ -73,6 +75,23 @@ const initialState: LocalState = {
     workdir: null,
     acceptEula: false,
   },
+  config2: {
+    custom: {
+      command: 'nc -kl 3010',
+    },
+    minecraft: {
+      filepath: null,
+      workdir: null,
+      acceptEula: false,
+    },
+    minecraft_be: {
+      filepath: null,
+      workdir: null,
+    },
+    factorio: {
+      savepath: null,
+    }
+  },
   child: null,
   inGameCommand: ''
 }
@@ -82,6 +101,9 @@ type MessagesEntry = {
   channel: 'stdout' | 'stderr',
   message: string,
 }
+
+
+const cs = configSlice
 export const localSlice = createSlice({
   name: 'local',
   initialState,
@@ -291,6 +313,14 @@ export const localSlice = createSlice({
           state.error = `Unkwown error: ${action.error.message}`
         }
         console.error(`rejected sendInGameCommand`)
+      })
+      .addMatcher(
+        (action) => action.type.startsWith('config/'),
+        (state, action) => {
+          console.log('default case')
+          console.log(JSON.stringify(state))
+          console.log(action)
+          cs.reducer(state.config2, action)
       })
   },
 })
