@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { killChild, updateCommand, updateLocalPort, runChecksAndLaunchLocal, updateProtocol } from '../features/localSlice';
+import { killChild, updateLocalPort, runChecksAndLaunchLocal, updateProtocol } from '../features/localSlice';
 import { useAppSelector, useAppDispatch } from '../app/hooks';
 
 import Box from '@mui/material/Box';
@@ -18,13 +18,14 @@ import { Protocol } from '../common';
 import { useTranslation } from 'react-i18next';
 import { FormProps } from '../types';
 import { OperationButton, ResultChip } from '../utils';
+import { customUpdateCommand } from '../features/configSlice';
 
 export const FormCustom: React.FC<FormProps> = ({ handleBack, handleNext }) => {
   const localMessages = useAppSelector(state => state.local.messages)
   const localPort = useAppSelector(state => state.local.port)
   const localStatus = useAppSelector(state => state.local.status)
   const checks = useAppSelector(state => state.local.checks)
-  const command = useAppSelector(state => state.local.command)
+  const command = useAppSelector(state => state.local.config.custom.command)
   const protocol = useAppSelector(state => state.local.protocol)
   const { t } = useTranslation();
   const dispatch = useAppDispatch()
@@ -86,7 +87,7 @@ export const FormCustom: React.FC<FormProps> = ({ handleBack, handleNext }) => {
             id="local-server-command"
             label={t('panel.startServer.steps.launchLocalServer.custom.settings.command')}
             variant="outlined"
-            onChange={e => dispatch(updateCommand(e.target.value))}
+            onChange={e => dispatch(customUpdateCommand(e.target.value))}
             value={command ? command : ''}
           />
 

@@ -1,4 +1,4 @@
-export type GameId = 'custom' | 'http' | 'minecraft' | 'minecraft_be' | 'factorio'
+export type GameId = 'custom' | 'minecraft' | 'minecraft_be' | 'factorio'
 export type Protocol = 'tcp' | 'udp'
 export type EndpointClaim = {
   protocol: Protocol,
@@ -10,8 +10,6 @@ export function toLocalPort(game: GameId): number {
   switch(game) {
     case 'custom':
       return 3010
-    case 'http':
-      return 80
     case 'minecraft':
       return 25565
     case 'minecraft_be':

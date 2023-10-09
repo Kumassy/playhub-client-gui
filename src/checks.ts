@@ -49,11 +49,11 @@ export const checkRegistry: CheckRegistry = {
     return output.stdout
   },
   [CHECK_OR_CREATE_EULA]: async (state?: RootState) => {
-    if (state == null || state.local.config.kind !== 'minecraft') {
+    if (state?.local.game !== 'minecraft') {
       throw new Error('config is not for minecraft')
     }
 
-    const workdir = state.local.config.workdir;
+    const workdir = state.local.config.minecraft.workdir;
     if (workdir == null) {
       throw new Error('workdir not set')
     }
@@ -79,8 +79,6 @@ export type CheckEntry = {
 export const getCheckList = (game: GameId): Array<CheckEntry> => {
   switch (game) {
     case 'custom':
-      return []
-    case 'http':
       return []
     case 'minecraft':
       return [{ id: CHECK_JAVA_VERSION, label: "javaVersion"}, { id: CHECK_OR_CREATE_EULA, label: "createEula"}]
