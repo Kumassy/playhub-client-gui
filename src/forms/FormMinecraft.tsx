@@ -23,14 +23,14 @@ import { OperationButton, ResultChip } from '../utils';
 import { minecraftSetAcceptEula, minecraftUpdateCommand, updateFilepath } from '../features/configSlice';
 
 export const FormMinecraft: React.FC<FormProps> = ({ handleBack, handleNext }) => {
+  const { t } = useTranslation();
   const localMessages = useAppSelector(state => state.local.messages)
   const localStatus = useAppSelector(state => state.local.status)
   const localPort = useAppSelector(state => state.local.port)
   const command = useAppSelector(state => state.local.config.minecraft.command)
   const checks = useAppSelector(state => state.local.checks)
-  const filepath = useAppSelector(state => state.local.config.minecraft.filepath ?? t('panel.startServer.steps.launchLocalServer.minecraft.errors.filepath'))
+  const filepath = useAppSelector(state => state.local.config.minecraft.filepath)
   const eulaChecked = useAppSelector(state => state.local.config.minecraft.acceptEula)
-  const { t } = useTranslation();
   const dispatch = useAppDispatch()
 
   const isBackDisabled = localStatus === 'running'
@@ -75,7 +75,7 @@ export const FormMinecraft: React.FC<FormProps> = ({ handleBack, handleNext }) =
           <Button
             variant="contained"
             onClick={async () => {
-              const file = await open({
+              const filepath = await open({
                 multiple: false,
                 filters: [{
                   name: 'jar',
@@ -83,7 +83,7 @@ export const FormMinecraft: React.FC<FormProps> = ({ handleBack, handleNext }) =
                 }]
               });
 
-              if (typeof file === 'string') {
+              if (typeof filepath === 'string') {
                 dispatch(updateFilepath({filepath, game: 'minecraft'}))
               }
             }}

@@ -23,13 +23,13 @@ import { OperationButton, ResultChip } from '../utils';
 import { minecraftBeUpdateCommand, updateFilepath } from '../features/configSlice';
 
 export const FormMinecraftBe: React.FC<FormProps> = ({ handleBack, handleNext }) => {
+  const { t } = useTranslation();
   const localMessages = useAppSelector(state => state.local.messages)
   const localStatus = useAppSelector(state => state.local.status)
   const localPort = useAppSelector(state => state.local.port)
   const command = useAppSelector(state => state.local.config.minecraft_be.command)
   const checks = useAppSelector(state => state.local.checks)
-  const filepath = useAppSelector(state => state.local.config.minecraft_be.filepath ?? t('panel.startServer.steps.launchLocalServer.minecraft_be.errors.filepath'))
-  const { t } = useTranslation();
+  const filepath = useAppSelector(state => state.local.config.minecraft_be.filepath)
   const dispatch = useAppDispatch()
 
   const isBackDisabled = localStatus === 'running'

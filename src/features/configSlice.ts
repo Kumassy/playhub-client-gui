@@ -125,7 +125,7 @@ interface updateFilepathArg {
   filepath: string,
   game: GameId,
 }
-export const updateFilepath = createAsyncThunk<string, updateFilepathArg>('updateFilepath', async ({filepath, game}) => {
+export const updateFilepath = createAsyncThunk<string, updateFilepathArg>(`${configSlice.name}/updateFilepath`, async ({filepath, game}) => {
   return await dirname(filepath)
 })
 

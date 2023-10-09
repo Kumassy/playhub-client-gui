@@ -29,7 +29,7 @@ export const FormFactorio: React.FC<FormProps> = ({ handleBack, handleNext }) =>
   const command = useAppSelector(state => state.local.config.factorio.command)
   const checks = useAppSelector(state => state.local.checks)
   const { t } = useTranslation();
-  const filepath = useAppSelector(state => state.local.config.factorio.savepath ?? t('panel.startServer.steps.launchLocalServer.factorio.errors.savepath'))
+  const filepath = useAppSelector(state => state.local.config.factorio.savepath)
   const dispatch = useAppDispatch()
 
   const isBackDisabled = localStatus === 'running'
