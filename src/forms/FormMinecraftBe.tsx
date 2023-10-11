@@ -20,7 +20,7 @@ import { useTranslation } from 'react-i18next';
 import { listen } from '@tauri-apps/api/event';
 import { FormProps } from '../types';
 import { OperationButton, ResultChip } from '../utils';
-import { minecraftBeUpdateCommand, updateFilepath } from '../features/configSlice';
+import { updateCommand, updateFilepath } from '../features/reducers/games/minecraftBe';
 
 export const FormMinecraftBe: React.FC<FormProps> = ({ handleBack, handleNext }) => {
   const { t } = useTranslation();
@@ -43,7 +43,7 @@ export const FormMinecraftBe: React.FC<FormProps> = ({ handleBack, handleNext })
       const unlisten = await listen<Array<string>>('tauri://file-drop', event => {
         if (event.payload.length === 1) {
           let filepath = event.payload[0];
-          dispatch(updateFilepath({filepath, game: 'minecraft_be'}))
+          dispatch(updateFilepath(filepath))
         }
       })
       unlistenRef.current = unlisten;
@@ -83,7 +83,7 @@ export const FormMinecraftBe: React.FC<FormProps> = ({ handleBack, handleNext })
               });
 
               if (typeof filepath === 'string') {
-                dispatch(updateFilepath({filepath, game: 'minecraft_be'}))
+                dispatch(updateFilepath(filepath))
               }
             }}
           >
@@ -107,7 +107,7 @@ export const FormMinecraftBe: React.FC<FormProps> = ({ handleBack, handleNext })
               id="local-server-command"
               label={t('panel.startServer.steps.launchLocalServer.minecraft_be.advancedSettings.command')}
               variant="outlined"
-              onChange={e => dispatch(minecraftBeUpdateCommand(e.target.value))}
+              onChange={e => dispatch(updateCommand(e.target.value))}
               value={command}
             />
             <TextField

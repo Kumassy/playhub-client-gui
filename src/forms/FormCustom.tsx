@@ -18,7 +18,7 @@ import { Protocol } from '../common';
 import { useTranslation } from 'react-i18next';
 import { FormProps } from '../types';
 import { OperationButton, ResultChip } from '../utils';
-import { customUpdateCommand } from '../features/configSlice';
+import { updateCommand } from '../features/reducers/games/custom';
 
 export const FormCustom: React.FC<FormProps> = ({ handleBack, handleNext }) => {
   const localMessages = useAppSelector(state => state.local.messages)
@@ -87,7 +87,7 @@ export const FormCustom: React.FC<FormProps> = ({ handleBack, handleNext }) => {
             id="local-server-command"
             label={t('panel.startServer.steps.launchLocalServer.custom.settings.command')}
             variant="outlined"
-            onChange={e => dispatch(customUpdateCommand(e.target.value))}
+            onChange={e => dispatch(updateCommand(e.target.value))}
             value={command ? command : ''}
           />
 

@@ -247,7 +247,7 @@ export const localSlice = createSlice({
         console.error(`rejected sendInGameCommand`)
       })
       .addMatcher(
-        (action) => action.type.startsWith('config/'),
+        (action) => action.type.startsWith('local/config'),
         (state, action) => {
           configSlice.reducer(state.config, action)
       })

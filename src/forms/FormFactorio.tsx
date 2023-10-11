@@ -19,8 +19,7 @@ import { Tooltip } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { FormProps } from '../types';
 import { OperationButton, ResultChip } from '../utils';
-import { factorioUpdateCommand, updateFilepath } from '../features/configSlice';
-
+import { updateCommand, updateFilepath } from '../features/reducers/games/factorio';
 
 export const FormFactorio: React.FC<FormProps> = ({ handleBack, handleNext }) => {
   const localMessages = useAppSelector(state => state.local.messages)
@@ -55,7 +54,7 @@ export const FormFactorio: React.FC<FormProps> = ({ handleBack, handleNext }) =>
                 const filepath = await open({ multiple: false, directory: true });
 
                 if (typeof filepath === 'string') {
-                  dispatch(updateFilepath({filepath, game: 'factorio'}))
+                  dispatch(updateFilepath(filepath))
                 }
               }}
             >
@@ -77,7 +76,7 @@ export const FormFactorio: React.FC<FormProps> = ({ handleBack, handleNext }) =>
               id="local-server-command"
               label={t('panel.startServer.steps.launchLocalServer.factorio.advancedSettings.command')}
               variant="outlined"
-              onChange={e => dispatch(factorioUpdateCommand(e.target.value))}
+              onChange={e => dispatch(updateCommand(e.target.value))}
               value={command}
             />
             <TextField
