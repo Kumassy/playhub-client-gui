@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { killChild, updateLocalPort, runChecksAndLaunchLocal } from '../features/localSlice';
+import { killChild, runChecksAndLaunchLocal } from '../features/localSlice';
 import { useAppSelector, useAppDispatch } from '../app/hooks';
 
 import { open } from '@tauri-apps/api/dialog';
@@ -20,13 +20,13 @@ import { useTranslation } from 'react-i18next';
 import { listen } from '@tauri-apps/api/event';
 import { FormProps } from '../types';
 import { OperationButton, ResultChip } from '../utils';
-import { updateCommand, updateFilepath } from '../features/reducers/games/minecraftBe';
+import { updateCommand, updateFilepath, updateLocalPort } from '../features/reducers/games/minecraftBe';
 
 export const FormMinecraftBe: React.FC<FormProps> = ({ handleBack, handleNext }) => {
   const { t } = useTranslation();
   const localMessages = useAppSelector(state => state.local.messages)
   const localStatus = useAppSelector(state => state.local.status)
-  const localPort = useAppSelector(state => state.local.port)
+  const localPort = useAppSelector(state => state.local.config.minecraft_be.endpoints[0].port)
   const command = useAppSelector(state => state.local.config.minecraft_be.command)
   const checks = useAppSelector(state => state.local.checks)
   const filepath = useAppSelector(state => state.local.config.minecraft_be.filepath)

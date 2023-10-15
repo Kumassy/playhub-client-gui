@@ -24,8 +24,6 @@ export interface LocalState {
   status: 'idle' | 'running' | 'succeeded' | 'failed',
   error: null | string,
   messages: Array<LocalStateMessage>,
-  port: number,
-  protocol: Protocol,
   game: keyof ConfigState,
   config: ConfigState,
   checks: Array<Check>,
@@ -37,8 +35,6 @@ const initialState: LocalState = {
   status: 'idle',
   error: null,
   messages: [],
-  port: toLocalPort('minecraft'),
-  protocol: 'tcp',
   game: 'minecraft',
   checks: getCheckList('minecraft').map((entry: CheckEntry) => {
     return {
@@ -79,9 +75,6 @@ export const localSlice = createSlice({
     setChild: (state, action: PayloadAction<Child | null>) => {
       state.child = action.payload
     },
-    updateLocalPort: (state, action: PayloadAction<number>) => {
-      state.port = action.payload
-    },
     updateGame: (state, action: PayloadAction<GameId>) => {
       const game = action.payload;
       state.game = game;
@@ -94,52 +87,6 @@ export const localSlice = createSlice({
         }
       })
 
-      state.port = toLocalPort(game);
-      // Define the initial state using that type
-      // const initialState: ConfigState = {
-      //   custom: {
-      //     command: 'nc -kl 3010',
-      //     // endpoints: [
-      //     //   {
-      //     //     protocol: 'tcp',
-      //     //     port: 3010,
-      //     //   }
-      //     // ]
-      //   },
-      //   minecraft: {
-      //     filepath: null,
-      //     workdir: null,
-      //     acceptEula: false,
-      //     // endpoints: [
-      //     //   {
-      //     //     protocol: 'tcp',
-      //     //     port: 25565,
-      //     //   }
-      //     // ]
-      //   },
-      //   minecraft_be: {
-      //     filepath: null,
-      //     workdir: null,
-      //     // endpoints: [
-      //     //   {
-      //     //     protocol: 'tcp',
-      //     //     port: 19132,
-      //     //   }
-      //     // ]
-      //   },
-      //   factorio: {
-      //     savepath: null,
-      //     // endpoints: [
-      //     //   {
-      //     //     protocol: 'udp',
-      //     //     port: 34197,
-      //     //   }
-      //     // ]
-      //   }
-      // }
-    },
-    updateProtocol: (state, action: PayloadAction<Protocol>) => {
-      state.protocol = action.payload
     },
     updateInGameCommand: (state, action: PayloadAction<string>) => {
       state.inGameCommand = action.payload
@@ -435,6 +382,6 @@ export const sendInGameCommand = createAsyncThunk<void, string, { state: RootSta
 })
 
 const { setChild } = localSlice.actions;
-export const { receiveMessage, updateLocalPort, updateGame, updateProtocol, updateInGameCommand } = localSlice.actions
+export const { receiveMessage, updateGame, updateInGameCommand } = localSlice.actions
 
 export default localSlice.reducer

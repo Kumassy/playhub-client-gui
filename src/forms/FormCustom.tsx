@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { killChild, updateLocalPort, runChecksAndLaunchLocal, updateProtocol } from '../features/localSlice';
+import { killChild, runChecksAndLaunchLocal } from '../features/localSlice';
 import { useAppSelector, useAppDispatch } from '../app/hooks';
 
 import Box from '@mui/material/Box';
@@ -18,15 +18,15 @@ import { Protocol } from '../common';
 import { useTranslation } from 'react-i18next';
 import { FormProps } from '../types';
 import { OperationButton, ResultChip } from '../utils';
-import { updateCommand } from '../features/reducers/games/custom';
+import { updateCommand, updateLocalPort, updateProtocol } from '../features/reducers/games/custom';
 
 export const FormCustom: React.FC<FormProps> = ({ handleBack, handleNext }) => {
   const localMessages = useAppSelector(state => state.local.messages)
-  const localPort = useAppSelector(state => state.local.port)
+  const localPort = useAppSelector(state => state.local.config.custom.endpoints[0].port)
   const localStatus = useAppSelector(state => state.local.status)
   const checks = useAppSelector(state => state.local.checks)
   const command = useAppSelector(state => state.local.config.custom.command)
-  const protocol = useAppSelector(state => state.local.protocol)
+  const protocol = useAppSelector(state => state.local.config.custom.endpoints[0].protocol)
   const { t } = useTranslation();
   const dispatch = useAppDispatch()
 
@@ -52,7 +52,7 @@ export const FormCustom: React.FC<FormProps> = ({ handleBack, handleNext }) => {
           label={t('panel.startServer.steps.launchLocalServer.custom.settings.port')}
           type="number"
           variant="outlined"
-          onChange={e => dispatch(updateLocalPort(parseInt(e.target.value)))}
+          onChange={e => dispatch(updateLocalPort({key: 'main', port: parseInt(e.target.value)}))}
           value={localPort}
         />
 
@@ -63,10 +63,10 @@ export const FormCustom: React.FC<FormProps> = ({ handleBack, handleNext }) => {
             id="select-protocol"
             value={protocol}
             label={t('panel.startServer.steps.launchLocalServer.custom.settings.protocol.label')}
-            onChange={(e: SelectChangeEvent<Protocol>) => dispatch(updateProtocol(e.target.value as Protocol))}
+            onChange={(e: SelectChangeEvent<Protocol>) => dispatch(updateProtocol({key: 'main', protocol: e.target.value as Protocol}))}
           >
-            <MenuItem value={'tcp'}>{t('panel.startServer.steps.launchLocalServer.custom.settings.protocol.tcp')}</MenuItem>
-            <MenuItem value={'udp'}>{t('panel.startServer.steps.launchLocalServer.custom.settings.protocol.udp')}</MenuItem>
+            <MenuItem value={'TCP'}>{t('panel.startServer.steps.launchLocalServer.custom.settings.protocol.tcp')}</MenuItem>
+            <MenuItem value={'UDP'}>{t('panel.startServer.steps.launchLocalServer.custom.settings.protocol.udp')}</MenuItem>
           </Select>
         </Box>
 

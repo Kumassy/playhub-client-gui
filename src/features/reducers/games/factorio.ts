@@ -1,24 +1,24 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { ConfigState, configSlice } from "../../configSlice"
 import { dirname } from "@tauri-apps/api/path"
-import { GameId } from "../../../common"
+import { EndpointClaim, GameId } from "../../../common"
 
 const game: GameId = 'factorio'
 
 export interface FactorioState {
   savepath: string,
   command: string,
+  endpoints: EndpointClaim[],
 }
 
 export const initialState: FactorioState = {
   savepath: './',
   command: 'docker run --rm -i -p 34197:34197/udp -v ./:/factorio --name ownserver-local-factorio factoriotools/factorio',
-      // endpoints: [
-    //   {
-    //     protocol: 'udp',
-    //     port: 34197,
-    //   }
-    // ]
+  endpoints: [
+    {
+      protocol: 'UDP',
+      port: 34197,
+    }
+  ]
 }
 
 export const factorioSlice = createSlice({
@@ -27,6 +27,9 @@ export const factorioSlice = createSlice({
   reducers: {
     updateCommand: (state, action: PayloadAction<string>) => {
       state.command = action.payload
+    },
+    updateLocalPort: (state, action: PayloadAction<number>) => {
+      state.endpoints[0].port = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -49,4 +52,4 @@ export const updateFilepath = createAsyncThunk<string, string>(`${factorioSlice.
 })
 
 
-export const { updateCommand } = factorioSlice.actions
+export const { updateCommand, updateLocalPort } = factorioSlice.actions

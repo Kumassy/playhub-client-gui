@@ -14,7 +14,7 @@ use data::CreateEulaError;
 use tauri::Manager;
 use log::*;
 use ownserver::{proxy_client::run, error::Error};
-use ownserver_lib::{Protocol, EndpointClaim};
+use ownserver_lib::{Protocol, EndpointClaim, EndpointClaims};
 use tokio::{fs, task::JoinSet};
 use tokio_util::sync::CancellationToken;
 
@@ -44,29 +44,15 @@ async fn collect_join_set(mut set: JoinSet<Result<(), Error>>) -> Result<(), Lau
 
 
 #[tauri::command]
-async fn launch_tunnel(window: tauri::Window, token_server: String, local_port: u16, payload: String) -> LaunchResult {
+async fn launch_tunnel(window: tauri::Window, token_server: String, endpoint_claims: EndpointClaims) -> LaunchResult {
     let cancellation_token = CancellationToken::new();
     let ct = cancellation_token.clone();
     let unlisten = window.once("interrupt_launch_tunnel", move |event| {
         ct.cancel();
     });
 
-    let endpoint_claims = match payload.as_str() {
-        "udp" => {
-            vec![EndpointClaim {
-                protocol: Protocol::UDP,
-                local_port,
-                remote_port: 0,
-            }]
-        },
-        _ => {
-            vec![EndpointClaim {
-                protocol: Protocol::TCP,
-                local_port,
-                remote_port: 0,
-            }]
-        }
-    };
+    dbg!("{:?}", &endpoint_claims);
+
     let store = Default::default();
     let control_port: u16 = 5000;
     // let token_server = "http://localhost:8123/v0/request_token";

@@ -1,6 +1,6 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { dirname } from "@tauri-apps/api/path"
-import { GameId } from "../../../common"
+import { EndpointClaim, GameId } from "../../../common"
 
 const game: GameId = 'minecraft'
 
@@ -9,6 +9,7 @@ export interface MinecraftState {
   workdir: string | null,
   command: string,
   acceptEula: boolean,
+  endpoints: EndpointClaim[],
 }
 
 export const initialState: MinecraftState = {
@@ -16,12 +17,12 @@ export const initialState: MinecraftState = {
   workdir: null,
   acceptEula: false,
   command: 'java -Xmx1024M -Xms1024M -jar ./server.jar nogui',
-      // endpoints: [
-    //   {
-    //     protocol: 'tcp',
-    //     port: 25565,
-    //   }
-    // ]
+  endpoints: [
+    {
+      protocol: 'TCP',
+      port: 25565,
+    }
+  ]
 }
 
 export const minecraftSlice = createSlice({
@@ -33,6 +34,9 @@ export const minecraftSlice = createSlice({
     },
     updateCommand: (state, action: PayloadAction<string>) => {
       state.command = action.payload
+    },
+    updateLocalPort: (state, action: PayloadAction<number>) => {
+      state.endpoints[0].port = action.payload
     }
   },
   extraReducers: (builder) => {
@@ -57,4 +61,4 @@ export const updateFilepath = createAsyncThunk<string, string>(`${minecraftSlice
 })
 
 
-export const { setAcceptEula, updateCommand } = minecraftSlice.actions
+export const { setAcceptEula, updateCommand, updateLocalPort } = minecraftSlice.actions

@@ -3,6 +3,7 @@ import type { RootState } from '../app/store'
 import { invoke } from '@tauri-apps/api/tauri'
 import { isLaunchResultError, LaunchResultError } from '../data'
 import { emit } from '@tauri-apps/api/event'
+import { EndpointClaimRs } from '../common'
 
 export interface ClientInfo {
   client_id: string,
@@ -82,11 +83,20 @@ export const tunnelSlice = createSlice({
 
 export const launchTunnel = createAsyncThunk<void, undefined, { state: RootState, rejectValue: LaunchResultError }>('launchTunnel', async (_, { getState, rejectWithValue }) => {
   const stateBefore = getState()
-  const payload = stateBefore.local.protocol
+  const game = stateBefore.local.game
+  const endpoint_claims = stateBefore.local.config[game].endpoints
+
+  const endpoint_claims_rs: EndpointClaimRs[] = endpoint_claims.map(e => {
+    return {
+      protocol: e.protocol,
+      local_port: e.port,
+      remote_port: 0,
+    }
+  })
   try {
     // this handle Ok value of launch_tunnel, ()
     // when launch_tunnel returns (), invoke is evaluated as null
-    await invoke('launch_tunnel', { tokenServer: stateBefore.tunnel.tokenServer, localPort: stateBefore.local.port, payload })
+    await invoke('launch_tunnel', { tokenServer: stateBefore.tunnel.tokenServer, endpointClaims: endpoint_claims_rs })
     return;
   } catch (e) {
     if (isLaunchResultError(e)) {
