@@ -253,7 +253,7 @@ const getCommand = async (rootState: RootState) => {
       break;
   }
 
-  const osType = rootState.tauri.os.type
+  const osType = rootState.tauri.os?.type ?? null
   switch(args[0]) {
     case 'java':
     case 'docker':
@@ -263,8 +263,10 @@ const getCommand = async (rootState: RootState) => {
     default:
       if (osType === 'Windows_NT') {
         return new Command('cmd', ['/c', command], spawnOptions)
-      } else {
+      } else if (osType !== null) {
         return new Command('sh', ['-c', command], spawnOptions)
+      } else {
+        throw new Error('tauri state is not initialized')
       }
   }
 }

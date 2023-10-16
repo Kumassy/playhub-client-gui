@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import './App.css'
 import { listen } from '@tauri-apps/api/event'
-import { useAppDispatch } from './app/hooks'
+import { useAppDispatch, useAppSelector } from './app/hooks'
 import { ClientInfo, updateClientInfo } from './features/tunnelSlice'
 import { useTranslation } from 'react-i18next';
 
@@ -13,7 +13,7 @@ import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 import { StepContent } from './steps'
-import { Drawer, Grid, InputLabel, List, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem, Select, SelectChangeEvent } from '@mui/material'
+import { Drawer, Grid, InputLabel, List, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem, Select, SelectChangeEvent, Typography } from '@mui/material'
 import { initializeTauriState } from './features/tauriSlice'
 
 function isClientInfo(arg: any): arg is ClientInfo {
@@ -36,6 +36,7 @@ function App() {
   const [lang, setLang] = useState<'en-US' | 'ja-JP' | null>(null);
   const { t, i18n } = useTranslation();
 
+  const appVersion = useAppSelector(state => state.tauri.app?.version ?? '')
 
   const unlistenRef = useRef<() => void>();
   useEffect(() => {
@@ -136,6 +137,7 @@ function App() {
       {panel === 'settings' &&
         <Box sx={{ flexGrow: 1, padding: 2, display: 'flex', justifyContent: 'space-between', flexDirection: 'column'}}>
           <Grid container spacing={2} sx={{ mb: 2 }}>
+            <Typography sx={{ p: 2 }}>OwnServer Client GUI version: {appVersion}</Typography>
             <Grid item xs={12}>
               <InputLabel id="select-lang-label">{t('panel.settings.selectLanguage')}</InputLabel>
               <Select

@@ -8,15 +8,20 @@ interface TauriState {
     arch: string,
     platform: Platform,
     type: OsType,
-  },
+  } | null,
   app: {
     version: string,
-  }
+  } | null
 }
+
+const initialState: TauriState = {
+  os: null,
+  app: null,
+};
 
 export const tauriSlice = createSlice({
   name: 'tauri',
-  initialState: {} as TauriState,
+  initialState,
   reducers: {
     setOs: (state, action: PayloadAction<TauriState['os']>) => {
       state.os = action.payload;
