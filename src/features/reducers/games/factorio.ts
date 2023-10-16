@@ -29,7 +29,10 @@ export const factorioSlice = createSlice({
       state.command = action.payload
     },
     updateLocalPort: (state, action: PayloadAction<number>) => {
-      state.endpoints[0].port = action.payload
+      const dir = state.savepath
+      const localPort = action.payload
+      state.endpoints[0].port = localPort
+      state.command = `docker run --rm -i -p ${localPort}:34197/udp -v ${dir}:/factorio --name ownserver-local-factorio factoriotools/factorio`
     }
   },
   extraReducers: (builder) => {
@@ -37,9 +40,10 @@ export const factorioSlice = createSlice({
       .addCase(updateFilepath.fulfilled, (state, action) => {
         const dir = action.payload
         const filepath = action.meta.arg
+        const localPort = state.endpoints[0].port
 
         state.savepath = filepath
-        state.command = `docker run --rm -i -p 34197:34197/udp -v ${dir}:/factorio --name ownserver-local-factorio factoriotools/factorio`
+        state.command = `docker run --rm -i -p ${localPort}:34197/udp -v ${dir}:/factorio --name ownserver-local-factorio factoriotools/factorio`
       })
       .addCase(updateFilepath.rejected, () => {
         console.error(`${factorioSlice.name}/updateFilepath rejected`)

@@ -226,6 +226,7 @@ const getCommand = async (localState: LocalState) => {
     case 'custom':
     case 'minecraft':
     case 'minecraft_be':
+    case 'factorio':
       command = localState.config[game].command
       break;
   }
