@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../app/store';
-import { arch, platform } from '@tauri-apps/api/os';
+import { arch, OsType, Platform, platform, type } from '@tauri-apps/api/os';
 import { getVersion } from '@tauri-apps/api/app';
 
 interface TauriState {
   os: {
     arch: string,
-    platform: string,
+    platform: Platform,
+    type: OsType,
   },
   app: {
     version: string,
@@ -36,12 +37,14 @@ export const initializeTauriState = createAsyncThunk<void, void, { state: RootSt
   try {
     const osArch = await arch();
     const osPlatform = await platform();
+    const osType = await type();
 
     const appVersion = await getVersion();
 
     dispatch(setOs({
       arch: osArch,
       platform: osPlatform,
+      type: osType,
     }));
     dispatch(setApp({
       version: appVersion,

@@ -58,23 +58,33 @@
             "execute": true,
             "scope": [
                 {
-                    "name": "run-java",
-                    "cmd": "java",
-                    "args": true
-                },
-                {
-                    "name": "run-sh",
+                    "name": "sh",
                     "cmd": "sh",
                     "args": true
                 },
                 {
-                    "name": "run-cmd",
+                    "name": "cmd",
                     "cmd": "cmd",
                     "args": true
                 },
                 {
-                    "name": "run-docker",
+                    "name": "java",
+                    "cmd": "java",
+                    "args": true
+                },
+                {
+                    "name": "docker",
                     "cmd": "docker",
+                    "args": true
+                },
+                {
+                    "name": "bedrock_server",
+                    "cmd": "bedrock_server",
+                    "args": true
+                },
+                {
+                    "name": "bedrock_server.exe",
+                    "cmd": "bedrock_server.exe",
                     "args": true
                 }
             ]

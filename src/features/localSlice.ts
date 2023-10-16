@@ -3,8 +3,7 @@ import type { RootState } from '../app/store'
 import { Child, Command } from '@tauri-apps/api/shell';
 
 import { CheckError, CheckId, checkRegistry, CheckResult, StatusCodeError, getCheckList, CheckEntry } from '../checks'
-import { GameId, toLocalPort, Protocol } from '../common'
-import { type } from '@tauri-apps/api/os';
+import { GameId } from '../common'
 import { ConfigState, configSlice } from './configSlice';
 
 export type LocalStateMessage = {
@@ -218,8 +217,9 @@ type LaunchLocalError =
   }
 
 
-const getCommand = async (localState: LocalState) => {
-  const game = localState.game;
+const getCommand = async (rootState: RootState) => {
+  const localState = rootState.local
+  const game = localState.game
 
   let command = null
   switch (game) {
@@ -234,7 +234,6 @@ const getCommand = async (localState: LocalState) => {
     throw new Error('command is null')
   }
 
-  const osType = await type();
   // note: '.split('\s+')' -> [']
   const args = command.trim().split(/\s+/)
   if (args[0] === '') {
@@ -254,23 +253,25 @@ const getCommand = async (localState: LocalState) => {
       break;
   }
 
+  const osType = rootState.tauri.os.type
   switch(args[0]) {
     case 'java':
-      return new Command('run-java', args.splice(1), spawnOptions)
     case 'docker':
-      return new Command('run-docker', args.splice(1), spawnOptions)
+    case 'bedrock_server':
+    case 'bedrock_server.exe':
+      return new Command(args[0], args.splice(1), spawnOptions)
     default:
       if (osType === 'Windows_NT') {
-        return new Command('run-cmd', ['/c', command], spawnOptions)
+        return new Command('cmd', ['/c', command], spawnOptions)
       } else {
-        return new Command('run-sh', ['-c', command], spawnOptions)
+        return new Command('sh', ['-c', command], spawnOptions)
       }
   }
 }
 
 export const launchLocal = createAsyncThunk<void, undefined, { state: RootState, rejectValue: LaunchLocalError }>('launchLocal', async (_, { getState, rejectWithValue, dispatch }) => {
   try {
-    const command = await getCommand(getState().local)
+    const command = await getCommand(getState())
     const p = new Promise((res, rej) => {
       command.on('close', data => {
         console.log(`command finished with code ${data.code} and signal ${data.signal}`);
@@ -308,7 +309,8 @@ export const launchLocal = createAsyncThunk<void, undefined, { state: RootState,
     }
   } catch (e) {
     return rejectWithValue({
-      'kind': 'CommandNotSet'
+      kind: 'CommandNotSet',
+      error: e
     })
   }
 })

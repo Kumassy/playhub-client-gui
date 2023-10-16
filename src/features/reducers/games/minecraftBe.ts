@@ -1,5 +1,5 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import { dirname } from "@tauri-apps/api/path"
+import { basename, dirname } from "@tauri-apps/api/path"
 import { EndpointClaim, GameId } from "../../../common"
 
 const game: GameId = 'minecraft_be'
@@ -7,6 +7,7 @@ const game: GameId = 'minecraft_be'
 export interface MinecraftBeState {
   filepath: string | null,
   workdir: string | null,
+  basename: string | null,
   command: string,
   endpoints: EndpointClaim[],
 }
@@ -14,7 +15,8 @@ export interface MinecraftBeState {
 export const initialState: MinecraftBeState = {
   filepath: null,
   workdir: null,
-  command: './bedrock_server',
+  basename: null,
+  command: 'bedrock_server',
   endpoints: [
     {
       protocol: 'TCP',
@@ -37,12 +39,14 @@ export const minecraftBeSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(updateFilepath.fulfilled, (state, action) => {
-        const dir = action.payload
+        const [dirname, basename] = action.payload
         const filepath = action.meta.arg
 
         state.filepath = filepath
-        state.workdir = dir
-        state.command = `${filepath}`
+        state.workdir = dirname
+        state.basename = basename
+
+        state.command = `${basename}`
       })
       .addCase(updateFilepath.rejected, () => {
         console.error(`${minecraftBeSlice.name}/updateFilepath rejected`)
@@ -50,8 +54,8 @@ export const minecraftBeSlice = createSlice({
   }
 })
 
-export const updateFilepath = createAsyncThunk<string, string>(`${minecraftBeSlice.name}/updateFilepath`, async (filepath) => {
-  return await dirname(filepath)
+export const updateFilepath = createAsyncThunk<string[], string>(`${minecraftBeSlice.name}/updateFilepath`, async (filepath) => {
+  return [await dirname(filepath), await basename(filepath)]
 })
 
 export const { updateCommand, updateLocalPort } = minecraftBeSlice.actions
