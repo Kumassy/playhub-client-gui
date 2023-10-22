@@ -12,6 +12,8 @@ export interface MinecraftState {
   endpoints: EndpointClaim[],
 }
 
+export const MINECRAFT_STATE_ENDPOINT_DEFAULT_KEY = 'minecraft-default-endpoint'
+
 export const initialState: MinecraftState = {
   filepath: null,
   workdir: null,
@@ -19,6 +21,7 @@ export const initialState: MinecraftState = {
   command: 'java -Xmx1024M -Xms1024M -jar ./server.jar nogui',
   endpoints: [
     {
+      key: MINECRAFT_STATE_ENDPOINT_DEFAULT_KEY,
       protocol: 'TCP',
       port: 25565,
     }

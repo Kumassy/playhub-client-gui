@@ -10,11 +10,14 @@ export interface FactorioState {
   endpoints: EndpointClaim[],
 }
 
+export const FACTORIO_STATE_ENDPOINT_DEFAULT_KEY = 'factorio-default-endpoint'
+
 export const initialState: FactorioState = {
   savepath: './',
   command: 'docker run --rm -i -p 34197:34197/udp -v ./:/factorio --name ownserver-local-factorio factoriotools/factorio',
   endpoints: [
     {
+      key: FACTORIO_STATE_ENDPOINT_DEFAULT_KEY,
       protocol: 'UDP',
       port: 34197,
     }

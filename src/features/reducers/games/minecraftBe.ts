@@ -12,6 +12,8 @@ export interface MinecraftBeState {
   endpoints: EndpointClaim[],
 }
 
+export const MINECRAFT_BE_STATE_ENDPOINT_DEFAULT_KEY = 'minecraft-be-default-endpoint'
+
 export const initialState: MinecraftBeState = {
   filepath: null,
   workdir: null,
@@ -19,6 +21,7 @@ export const initialState: MinecraftBeState = {
   command: 'bedrock_server',
   endpoints: [
     {
+      key: MINECRAFT_BE_STATE_ENDPOINT_DEFAULT_KEY,
       protocol: 'TCP',
       port: 19132,
     }

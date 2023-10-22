@@ -8,7 +8,7 @@ export interface CustomState {
   endpoints: EndpointClaim[],
 }
 
-export const CUSTOM_STATE_ENDPOINT_DEFAULT_KEY = 'default-endpoint'
+export const CUSTOM_STATE_ENDPOINT_DEFAULT_KEY = 'custom-default-endpoint'
 
 export const initialState: CustomState = {
   command: 'nc -kl 3010',

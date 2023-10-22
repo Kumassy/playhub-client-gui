@@ -64,14 +64,14 @@ export const FormCustom: React.FC<FormProps> = ({ handleBack, handleNext }) => {
                     <TextField
                       fullWidth
                       type="number"
-                      onChange={e => dispatch(updateLocalPort({key: endpoint.key || CUSTOM_STATE_ENDPOINT_DEFAULT_KEY, port: parseInt(e.target.value)}))}
+                      onChange={e => dispatch(updateLocalPort({key: endpoint.key, port: parseInt(e.target.value)}))}
                       value={endpoint.port}
                     />
                   </TableCell>
                   <TableCell>
                     <Select
                       value={endpoint.protocol}
-                      onChange={(e: SelectChangeEvent<Protocol>) => dispatch(updateProtocol({key: endpoint.key || CUSTOM_STATE_ENDPOINT_DEFAULT_KEY, protocol: e.target.value as Protocol}))}
+                      onChange={(e: SelectChangeEvent<Protocol>) => dispatch(updateProtocol({key: endpoint.key, protocol: e.target.value as Protocol}))}
                     >
                       <MenuItem value={'TCP'}>{t('panel.startServer.steps.launchLocalServer.custom.settings.protocol.tcp')}</MenuItem>
                       <MenuItem value={'UDP'}>{t('panel.startServer.steps.launchLocalServer.custom.settings.protocol.udp')}</MenuItem>
@@ -80,7 +80,8 @@ export const FormCustom: React.FC<FormProps> = ({ handleBack, handleNext }) => {
                   <TableCell>
                     <Button
                       color="inherit"
-                      onClick={e => dispatch(removeEndpoint(endpoint.key || CUSTOM_STATE_ENDPOINT_DEFAULT_KEY))}
+                      onClick={e => dispatch(removeEndpoint(endpoint.key))}
+                      disabled={endpoint.key === CUSTOM_STATE_ENDPOINT_DEFAULT_KEY}
                     >
                       remove
                     </Button>

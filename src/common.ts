@@ -1,7 +1,7 @@
 export type GameId = 'custom' | 'minecraft' | 'minecraft_be' | 'factorio'
 export type Protocol = 'TCP' | 'UDP'
 export type EndpointClaim = {
-  key?: string,
+  key: string,
   protocol: Protocol,
   port: number
 }
