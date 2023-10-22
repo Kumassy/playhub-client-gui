@@ -49,9 +49,9 @@ export const FormCustom: React.FC<FormProps> = ({ handleBack, handleNext }) => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Local Port</TableCell>
-                <TableCell>Protocol</TableCell>
-                <TableCell>Operation</TableCell>
+                <TableCell>{t('panel.startServer.steps.launchLocalServer.custom.settings.endpoints.port')}</TableCell>
+                <TableCell>{t('panel.startServer.steps.launchLocalServer.custom.settings.endpoints.protocol.label')}</TableCell>
+                <TableCell>{t('panel.startServer.steps.launchLocalServer.custom.settings.endpoints.operation.label')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -73,8 +73,8 @@ export const FormCustom: React.FC<FormProps> = ({ handleBack, handleNext }) => {
                       value={endpoint.protocol}
                       onChange={(e: SelectChangeEvent<Protocol>) => dispatch(updateProtocol({key: endpoint.key, protocol: e.target.value as Protocol}))}
                     >
-                      <MenuItem value={'TCP'}>{t('panel.startServer.steps.launchLocalServer.custom.settings.protocol.tcp')}</MenuItem>
-                      <MenuItem value={'UDP'}>{t('panel.startServer.steps.launchLocalServer.custom.settings.protocol.udp')}</MenuItem>
+                      <MenuItem value={'TCP'}>{t('panel.startServer.steps.launchLocalServer.custom.settings.endpoints.protocol.tcp')}</MenuItem>
+                      <MenuItem value={'UDP'}>{t('panel.startServer.steps.launchLocalServer.custom.settings.endpoints.protocol.udp')}</MenuItem>
                     </Select>
                   </TableCell>
                   <TableCell>
@@ -83,7 +83,7 @@ export const FormCustom: React.FC<FormProps> = ({ handleBack, handleNext }) => {
                       onClick={e => dispatch(removeEndpoint(endpoint.key))}
                       disabled={endpoint.key === CUSTOM_STATE_ENDPOINT_DEFAULT_KEY}
                     >
-                      remove
+                      {t('panel.startServer.steps.launchLocalServer.custom.settings.endpoints.operation.remove')}
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -96,7 +96,7 @@ export const FormCustom: React.FC<FormProps> = ({ handleBack, handleNext }) => {
                     color="inherit"
                     onClick={e => dispatch(addEndpoint())}
                   >
-                    Add
+                    {t('panel.startServer.steps.launchLocalServer.custom.settings.endpoints.operation.add')}
                   </Button>
                 </TableCell>
               </TableRow>

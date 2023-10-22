@@ -107,11 +107,19 @@
                             "label": "Settings",
                             "useLocalFeature": "Enter the command to start the game server",
                             "command": "Server Startup Command",
-                            "port": "Port",
-                            "protocol": {
-                                "label": "Protocol",
-                                "tcp": "TCP",
-                                "udp": "UDP"
+                            "endpoints": {
+                                "label": "Endpoints",
+                                "port": "Port",
+                                "protocol": {
+                                    "label": "Protocol",
+                                    "tcp": "TCP",
+                                    "udp": "UDP"
+                                },
+                                "operation": {
+                                    "label": "Operation",
+                                    "add": "Add",
+                                    "remove": "Remove"
+                                }
                             }
                         },
                         "tasks": {

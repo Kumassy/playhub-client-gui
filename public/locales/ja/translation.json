@@ -107,11 +107,19 @@
                             "label": "設定",
                             "useLocalFeature": "ゲームサーバーを起動するコマンドを入力する",
                             "command": "サーバー起動コマンド",
-                            "port": "ポート",
-                            "protocol": {
-                                "label": "プロトコル",
-                                "tcp": "TCP",
-                                "udp": "UDP"
+                            "endpoints": {
+                                "label": "エンドポイント一覧",
+                                "port": "ポート",
+                                "protocol": {
+                                    "label": "プロトコル",
+                                    "tcp": "TCP",
+                                    "udp": "UDP"
+                                },
+                                "operation": {
+                                    "label": "操作",
+                                    "add": "追加",
+                                    "remove": "削除"
+                                }
                             }
                         },
                         "tasks": {
