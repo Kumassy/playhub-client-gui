@@ -8,11 +8,13 @@ export interface CustomState {
   endpoints: EndpointClaim[],
 }
 
+export const CUSTOM_STATE_ENDPOINT_DEFAULT_KEY = 'default-endpoint'
+
 export const initialState: CustomState = {
   command: 'nc -kl 3010',
   endpoints: [
     {
-      key: 'main',
+      key: CUSTOM_STATE_ENDPOINT_DEFAULT_KEY,
       protocol: 'TCP',
       port: 3010,
     }
@@ -68,4 +70,4 @@ export const customSlice = createSlice({
   },
 })
 
-export const { updateCommand, updateLocalPort, updateProtocol } = customSlice.actions
+export const { updateCommand, updateLocalPort, updateProtocol, addEndpoint, removeEndpoint } = customSlice.actions

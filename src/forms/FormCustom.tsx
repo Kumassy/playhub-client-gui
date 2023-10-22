@@ -13,20 +13,19 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import AutoScroll from '@brianmcallister/react-auto-scroll';
-import { Checkbox, Collapse, FormControlLabel, InputLabel, MenuItem, Select, SelectChangeEvent, Tooltip } from '@mui/material';
+import { Checkbox, Collapse, FormControlLabel, InputLabel, MenuItem, Paper, Select, SelectChangeEvent, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip } from '@mui/material';
 import { Protocol } from '../common';
 import { useTranslation } from 'react-i18next';
 import { FormProps } from '../types';
 import { OperationButton, ResultChip } from '../utils';
-import { updateCommand, updateLocalPort, updateProtocol } from '../features/reducers/games/custom';
+import { CUSTOM_STATE_ENDPOINT_DEFAULT_KEY, addEndpoint, removeEndpoint, updateCommand, updateLocalPort, updateProtocol } from '../features/reducers/games/custom';
 
 export const FormCustom: React.FC<FormProps> = ({ handleBack, handleNext }) => {
   const localMessages = useAppSelector(state => state.local.messages)
-  const localPort = useAppSelector(state => state.local.config.custom.endpoints[0].port)
   const localStatus = useAppSelector(state => state.local.status)
   const checks = useAppSelector(state => state.local.checks)
   const command = useAppSelector(state => state.local.config.custom.command)
-  const protocol = useAppSelector(state => state.local.config.custom.endpoints[0].protocol)
+  const endpoints = useAppSelector(state => state.local.config.custom.endpoints)
   const { t } = useTranslation();
   const dispatch = useAppDispatch()
 
@@ -46,29 +45,63 @@ export const FormCustom: React.FC<FormProps> = ({ handleBack, handleNext }) => {
           {t('panel.startServer.steps.launchLocalServer.custom.settings.label')}
         </Typography>
 
-        <TextField
-          fullWidth
-          id="local-port"
-          label={t('panel.startServer.steps.launchLocalServer.custom.settings.port')}
-          type="number"
-          variant="outlined"
-          onChange={e => dispatch(updateLocalPort({key: 'main', port: parseInt(e.target.value)}))}
-          value={localPort}
-        />
-
-        <Box>
-          <InputLabel id="select-protocol-label">{t('panel.startServer.steps.launchLocalServer.custom.settings.protocol.label')}</InputLabel>
-          <Select
-            labelId="select-protocol-label"
-            id="select-protocol"
-            value={protocol}
-            label={t('panel.startServer.steps.launchLocalServer.custom.settings.protocol.label')}
-            onChange={(e: SelectChangeEvent<Protocol>) => dispatch(updateProtocol({key: 'main', protocol: e.target.value as Protocol}))}
-          >
-            <MenuItem value={'TCP'}>{t('panel.startServer.steps.launchLocalServer.custom.settings.protocol.tcp')}</MenuItem>
-            <MenuItem value={'UDP'}>{t('panel.startServer.steps.launchLocalServer.custom.settings.protocol.udp')}</MenuItem>
-          </Select>
-        </Box>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Local Port</TableCell>
+                <TableCell>Protocol</TableCell>
+                <TableCell>Operation</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {endpoints.map((endpoint) => (
+                <TableRow
+                  key={endpoint.key}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell>
+                    <TextField
+                      fullWidth
+                      type="number"
+                      onChange={e => dispatch(updateLocalPort({key: endpoint.key || CUSTOM_STATE_ENDPOINT_DEFAULT_KEY, port: parseInt(e.target.value)}))}
+                      value={endpoint.port}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Select
+                      value={endpoint.protocol}
+                      onChange={(e: SelectChangeEvent<Protocol>) => dispatch(updateProtocol({key: endpoint.key || CUSTOM_STATE_ENDPOINT_DEFAULT_KEY, protocol: e.target.value as Protocol}))}
+                    >
+                      <MenuItem value={'TCP'}>{t('panel.startServer.steps.launchLocalServer.custom.settings.protocol.tcp')}</MenuItem>
+                      <MenuItem value={'UDP'}>{t('panel.startServer.steps.launchLocalServer.custom.settings.protocol.udp')}</MenuItem>
+                    </Select>
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      color="inherit"
+                      onClick={e => dispatch(removeEndpoint(endpoint.key || CUSTOM_STATE_ENDPOINT_DEFAULT_KEY))}
+                    >
+                      remove
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+              <TableRow>
+                <TableCell colSpan={2}>
+                </TableCell>
+                <TableCell>
+                  <Button
+                    color="inherit"
+                    onClick={e => dispatch(addEndpoint())}
+                  >
+                    Add
+                  </Button>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
 
         <FormControlLabel
           control={
