@@ -3,12 +3,8 @@ import type { RootState } from '../app/store'
 import { invoke } from '@tauri-apps/api/tauri'
 import { isLaunchResultError, LaunchResultError } from '../data'
 import { emit } from '@tauri-apps/api/event'
-import { EndpointClaimRs } from '../common'
+import { ClientInfo, EndpointClaimRs } from '../common'
 
-export interface ClientInfo {
-  client_id: string,
-  remote_addr: string,
-}
 
 // Define a type for the slice state
 interface TunnelState {
@@ -31,11 +27,7 @@ export const tunnelSlice = createSlice({
   initialState,
   reducers: {
     updateClientInfo: (state, action: PayloadAction<ClientInfo>) => {
-      const clientInfo = {
-        client_id: action.payload.client_id,
-        remote_addr: action.payload.remote_addr,
-      }
-      state.clientInfo = clientInfo
+      state.clientInfo = action.payload
     },
     updateTokenServer: (state, action: PayloadAction<string>) => {
       state.tokenServer = action.payload

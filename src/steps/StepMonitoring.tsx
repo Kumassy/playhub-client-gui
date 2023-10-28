@@ -1,10 +1,12 @@
 import { Box, Button, FormControl, Grid, InputAdornment, InputLabel, OutlinedInput, Typography } from "@mui/material";
+import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import React from "react";
 import { useAppSelector, useAppDispatch } from '../app/hooks';
 import AutoScroll from "@brianmcallister/react-auto-scroll";
 import { sendInGameCommand, updateInGameCommand } from "../features/localSlice";
 import { useTranslation } from "react-i18next";
 import { StepMonitoringProps } from "./types";
+import { formatProtocol } from "../common";
 
 export const StepMonitoring: React.FC<StepMonitoringProps> = ({ handleBack, handleNext }) => {
   const clientInfo = useAppSelector(state => state.tunnel.clientInfo)
@@ -31,7 +33,14 @@ export const StepMonitoring: React.FC<StepMonitoringProps> = ({ handleBack, hand
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography>
-              {t('panel.startServer.steps.monitor.publicAddress')}: {clientInfo ? clientInfo.remote_addr : "<error>"}
+              <p>{t('panel.startServer.steps.monitor.publicAddress')}</p>
+              {clientInfo && (
+                <ul>
+                  {clientInfo.endpoints.map(endpoint => (
+                    <li key={endpoint.id} style={{ verticalAlign: 'middle' }}>{formatProtocol(endpoint.protocol)}://localhost:{endpoint.local_port} <SyncAltIcon sx={{verticalAlign: 'middle'}}/> {clientInfo.host}:{endpoint.remote_port}</li>
+                  ))}
+                </ul>
+              )}
             </Typography>
           </Grid>
           <Grid item xs={12}>

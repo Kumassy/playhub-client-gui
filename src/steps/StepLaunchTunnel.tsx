@@ -1,12 +1,13 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, Button, Grid, TextField, Tooltip, Typography } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import React from "react";
 import { launchTunnel, interruptTunnel, updateTokenServer } from "../features/tunnelSlice";
 import { useAppSelector, useAppDispatch } from '../app/hooks';
 import { useTranslation } from "react-i18next";
 import { OperationButton, ResultChip } from "../utils";
 import { StepLaunchTunnelProps } from "./types";
-
+import { formatProtocol } from "../common";
 
 export const StepLaunchTunnel: React.FC<StepLaunchTunnelProps> = ({ handleBack, handleNext }) => {
   const tokenServer = useAppSelector(state => state.tunnel.tokenServer)
@@ -66,7 +67,12 @@ export const StepLaunchTunnel: React.FC<StepLaunchTunnelProps> = ({ handleBack, 
                   {clientInfo ?
                     <div>
                       <p>{t('panel.startServer.steps.configureOwnServer.tasks.clientID')}: {clientInfo.client_id}</p>
-                      <p>{t('panel.startServer.steps.configureOwnServer.tasks.publicAddress')}: {clientInfo.remote_addr}</p>
+                      <p>{t('panel.startServer.steps.configureOwnServer.tasks.publicAddress')}</p>
+                      <ul>
+                        {clientInfo.endpoints.map(endpoint => (
+                          <li key={endpoint.id}>{formatProtocol(endpoint.protocol)}://localhost:{endpoint.local_port} <SyncAltIcon sx={{verticalAlign: 'middle'}}/> {clientInfo.host}:{endpoint.remote_port}</li>
+                        ))}
+                      </ul>
                     </div>
                     : <div></div>
                   }
