@@ -19,7 +19,7 @@ const initialState: TunnelState = {
   tunnelStatus: 'idle',
   clientInfo: null,
   error: null,
-  tokenServer: "https://auth.ownserver.kumassy.com/v1/request_token",
+  tokenServer: "https://auth.ownserver.kumassy.com/v2/request_token",
 }
 
 export const tunnelSlice = createSlice({
